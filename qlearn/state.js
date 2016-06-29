@@ -13,7 +13,7 @@ function State() {
   if (opx == XLEN-2 && opy == YLEN-2) {
     this.opPos = new Position(3,3);
   }
-  if (this.is_collided() || true) {
+  if (this.is_collided([]) ||  true) {
     this.opPos = new Position(3,3);
     this.myPos = new Position(1,1);
   }
@@ -29,9 +29,12 @@ State.prototype = {
   get_distance_to_target : function() {
     return this.myPos.get_distance(this.trPos);
   },
-  is_collided : function() {
-    var opdist = this.myPos.get_distance(this.opPos);
-    if (opdist < 2) { return true; }
+  is_collided : function(walls) {
+    for (var i=0; i<walls.length; i++) {
+      if (this.myPos.equals(walls[i])) {
+        return true;
+      }
+    }
     return false;
   },
   is_reached : function() {

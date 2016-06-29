@@ -49,6 +49,13 @@ window.onload = function () {
   }
 
   function main_routine() {
+    var is_collided = env.state.is_collided(env.walls);
+    var is_reached = env.state.is_reached();
+    if (is_collided || is_reached) {
+      restart(is_reached);
+      return;
+    }
+
     var statenow = env.state.to_id();
     var action = qlearn.get_next_action(statenow);
     env.receive_action(action);
@@ -56,12 +63,6 @@ window.onload = function () {
     var nextbestaction = qlearn.select_best_action(nextstate);
     var reward = env.get_reward();
     qlearn.learn(statenow, action, reward, nextstate, nextbestaction);
-
-    var is_collided = env.state.is_collided();
-    var is_reached = env.state.is_reached();
-    if (is_collided || is_reached) {
-      restart(is_reached);
-    }
     walked++;
   }
 
@@ -145,11 +146,13 @@ window.onload = function () {
   }
 
   function draw_opponent() {
-    var pos = env.state.opPos;
-    var x = to_x_window(pos.x);
-    var y = to_y_window(pos.y);
+    var walls = env.walls;
     ctx1.fillStyle = 'rgb(229, 0, 11)';
-    ctx1.fillRect(x-edge, y-edge, edge*3, edge*3);
+    for (var i=0; i<walls.length; i++) {
+      var x = to_x_window(walls[i].x);
+      var y = to_y_window(walls[i].y);
+      ctx1.fillRect(x, y, edge, edge);
+    }
   }
 
   function draw_target() {
@@ -167,6 +170,15 @@ window.onload = function () {
   function to_y_window(y) {
     y = YLEN - y - 1;
     return padd(y*edge);
+  }
+
+  function to_x_local(x) {
+    return Math.floor((x-padding)/edge);
+  }
+
+  function to_y_local(y) {
+    var yl = Math.floor((y-padding)/edge);
+    return YLEN - yl - 1;
   }
 
   function padd(org) {
@@ -198,7 +210,15 @@ window.onload = function () {
       FPS--; set_FPS( FPS);
     }
   }
+
+  function onMouseDown(evt) {
+    var mx = evt.clientX, my = evt.clientY;
+    var lx = to_x_local(mx), ly = to_y_local(my);
+    env.toggle_wall(new Position(lx, ly));
+  }
+
   document.onkeydown = onKeyDown;
+  document.onmousedown = onMouseDown;
 
   loop();
 }
