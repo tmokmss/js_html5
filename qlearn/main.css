@@ -1,0 +1,22 @@
+﻿body {
+}
+
+#id_canvas1 {
+ position:absolute;
+ top: 0px;
+ left: 0px;
+ z-index: 1;
+}
+
+#info {
+ position:absolute;
+ top: 0px;
+ left: 420px;
+ z-index: 1;
+}
+#instruction {
+ position:absolute;
+ top: 450px;
+ left: 420px;
+ z-index: 1;
+}

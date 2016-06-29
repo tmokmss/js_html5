@@ -1,0 +1,107 @@
+var XMIN = 0, XMAX = 7, YMIN = 0, YMAX = 7;
+var XLEN = (XMAX-XMIN+1), YLEN = (YMAX-YMIN+1);
+
+function State() {
+  var opx = Math.floor(Math.random()*XLEN);
+  var opy = Math.floor(Math.random()*YLEN);
+  // opx=2,opy=2;
+  this.myPos = new Position(
+    Math.floor(Math.random()*XLEN),
+    Math.floor(Math.random()*YLEN));  // position of agent
+  this.opPos = new Position(opx,opy); // position of opponent
+  this.trPos = new Position(XLEN-2,YLEN-2); // position of target
+  if (opx == XLEN-2 && opy == YLEN-2) {
+    this.opPos = new Position(3,3);
+  }
+  if (this.is_collided() || true) {
+    this.opPos = new Position(3,3);
+    this.myPos = new Position(1,1);
+  }
+}
+
+State.prototype = {
+  go_to_next_state : function(action) {
+    this.myPos.move(action);
+  },
+  to_id : function() {
+    return this.opPos.to_id() *XLEN*YLEN + this.myPos.to_id();
+  },
+  get_distance_to_target : function() {
+    return this.myPos.get_distance(this.trPos);
+  },
+  is_collided : function() {
+    var opdist = this.myPos.get_distance(this.opPos);
+    if (opdist < 2) { return true; }
+    return false;
+  },
+  is_reached : function() {
+    var trdist = this.myPos.get_distance(this.trPos);
+    if (trdist == 0) { return true; }
+    return false;
+  }
+}
+
+function Position(x, y) {
+  this.x = x;
+  this.y = y;
+}
+Position.prototype = {
+  move : function(action) {
+    switch (action) {
+      case ACTION.N:
+        this.x += 0; this.y += 1;
+        break;
+      case ACTION.NE:
+        this.x += 1; this.y += 1;
+        break;
+      case ACTION.E:
+        this.x += 1; this.y += 0;
+        break;
+      case ACTION.SE:
+        this.x += 1; this.y += -1;
+        break;
+      case ACTION.S:
+        this.x += 0; this.y += -1;
+        break;
+      case ACTION.SW:
+        this.x += -1; this.y += -1;
+        break;
+      case ACTION.W:
+        this.x += -1; this.y += 0;
+        break;
+      case ACTION.NW:
+        this.x += -1; this.y += 1;
+        break;
+    }
+    if (this.x < XMIN) this.x = XMIN;
+    if (this.x > XMAX) this.x = XMAX;
+    if (this.y < YMIN) this.y = YMIN;
+    if (this.y > YMAX) this.y = YMAX;
+  },
+  to_id : function() {
+    return YLEN*this.x + this.y;
+  },
+  get_distance : function(pos) {
+    var dx = this.x - pos.x;
+    var dy = this.y - pos.y;
+    return Math.sqrt(dx*dx + dy*dy);
+  },
+  equals : function(pos) {
+    if (pos.x == this.x && pos.y == this.y) {
+      return true;
+    }
+    return false;
+  }
+}
+
+var ACTION = {
+  N : 0,
+  NE : 1,
+  E : 2,
+  SE : 3,
+  S : 4,
+  SW : 5,
+  W : 6,
+  NW : 7,
+  LENGTH : 8
+}
