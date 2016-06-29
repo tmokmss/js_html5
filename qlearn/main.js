@@ -211,14 +211,18 @@ window.onload = function () {
     }
   }
 
-  function onMouseDown(evt) {
+  prevx = 0, prevy = 0;
+  function onMouseMove(evt) {
+    if (!evt.buttons) return;
     var mx = evt.clientX, my = evt.clientY;
     var lx = to_x_local(mx), ly = to_y_local(my);
+    if (prevx == lx && prevy == ly) return;
+    prevx = lx, prevy = ly;
     env.toggle_wall(new Position(lx, ly));
   }
 
   document.onkeydown = onKeyDown;
-  document.onmousedown = onMouseDown;
+  document.onmousemove = onMouseMove;
 
   loop();
 }

@@ -24,7 +24,7 @@ Environment.prototype = {
       reward = 50;
     }
     else if (is_collided) {
-      reward = -1000;
+      reward = -100;
     }
     /*
     else if (now_distance < this.prev_distance) {
