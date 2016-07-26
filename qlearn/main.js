@@ -17,6 +17,8 @@ window.onload = function () {
   run_background = false;
   running = false;
   is_before_success = false;
+  qdiff_total = 0;
+  last_qdiff = 0;
 
   if (!canvas1 || !canvas1.getContext) {
       alert("Not supported");
@@ -41,6 +43,8 @@ window.onload = function () {
     env.initialize();
     is_before_success = is_success;
     walked = 0;
+    last_qdiff = qdiff_total;
+    qdiff_total = 0;
   }
 
   function set_FPS(fps) {
@@ -63,6 +67,7 @@ window.onload = function () {
     var nextbestaction = qlearn.select_best_action(nextstate);
     var reward = env.get_reward();
     qlearn.learn(statenow, action, reward, nextstate, nextbestaction);
+    qdiff_total += qlearn.lastdiff;
     walked++;
   }
 
@@ -194,6 +199,7 @@ window.onload = function () {
     infos += "success: " + success + "<br>";
     infos += "failure: " + failed + "<br>";
     infos += "average_step: " + average_walk + "<br>";
+    infos += "qdiff: " + last_qdiff + "<br>" ;
     infos += "walk: " + walked + "<br>";
     sampleNode.innerHTML=infos;
   }
