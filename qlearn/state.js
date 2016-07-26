@@ -2,21 +2,8 @@ var XMIN = 0, XMAX = 7, YMIN = 0, YMAX = 7;
 var XLEN = (XMAX-XMIN+1), YLEN = (YMAX-YMIN+1);
 
 function State() {
-  var opx = Math.floor(Math.random()*XLEN);
-  var opy = Math.floor(Math.random()*YLEN);
-  // opx=2,opy=2;
-  this.myPos = new Position(
-    Math.floor(Math.random()*XLEN),
-    Math.floor(Math.random()*YLEN));  // position of agent
-  this.opPos = new Position(opx,opy); // position of opponent
   this.trPos = new Position(XLEN-2,YLEN-2); // position of target
-  if (opx == XLEN-2 && opy == YLEN-2) {
-    this.opPos = new Position(3,3);
-  }
-  if (this.is_collided([]) ||  true) {
-    this.opPos = new Position(3,3);
-    this.myPos = new Position(1,1);
-  }
+  this.myPos = new Position(1,1);
 }
 
 State.prototype = {
@@ -24,7 +11,7 @@ State.prototype = {
     this.myPos.move(action);
   },
   to_id : function() {
-    return this.opPos.to_id() *XLEN*YLEN + this.myPos.to_id();
+    return this.myPos.to_id();
   },
   get_distance_to_target : function() {
     return this.myPos.get_distance(this.trPos);
@@ -47,6 +34,11 @@ State.prototype = {
 function Position(x, y) {
   this.x = x;
   this.y = y;
+  arguments.callee.to_xy = function(id) {
+    var x = Math.floor(id / YLEN);
+    var y = id - x*YLEN;
+    return new Position(x, y);
+  }
 }
 Position.prototype = {
   move : function(action) {

@@ -1,7 +1,7 @@
 function Environment() {
-  this.statenum = Math.pow(XLEN*YLEN, 2);
+  this.statenum = Math.pow(XLEN*YLEN, 1);
   this.actnum = ACTION.LENGTH;
-  this.walls = [new Position(1,2), new Position(3,3)];
+  this.walls = [new Position(XLEN/2,YLEN/2)];
 
   this.initialize();
 }

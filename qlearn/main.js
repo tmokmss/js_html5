@@ -1,6 +1,6 @@
 window.onload = function () {
   width = 600,
-  height = 800,
+  height = 600,
   FPS = 30.0,
   delay = 1000.0 / FPS,
   edge = 50,
@@ -74,7 +74,7 @@ window.onload = function () {
       draw_agent();
       draw_opponent();
       draw_target();
-      draw_q_indicator();
+      draw_q_indicator_all();
       update_info();
     }
     else {
@@ -102,26 +102,28 @@ window.onload = function () {
     }
   }
 
-  function draw_q_indicator() {
-    var statenow = env.state.to_id();
-    var qnow = qlearn.get_q_in_thestate(statenow);
-    var minmax = qlearn.get_minmax_q_in_thestate(statenow);
-    var pos = env.state.myPos;
-    var x = to_x_window(pos.x) + edge/2;
-    var y = to_y_window(pos.y) + edge/2;
-    var angle = 2*Math.PI/ACTION.LENGTH;
-    ctx1.fillStyle = 'rgb(25, 135, 22)';
-    for (var a=0; a < ACTION.LENGTH; a++) {
-      var alpha = 0.5;
-      if (minmax[0] > minmax[1]) {
-        alpha = (qnow[a]-minmax[1])/(minmax[0]-minmax[1]);
+  function draw_q_indicator_all() {
+    for (var s=0; s < env.statenum; s++) {
+      var statenow = s;
+      var qnow = qlearn.get_q_in_thestate(statenow);
+      var minmax = qlearn.get_minmax_q_in_thestate(statenow);
+      var pos = Position.to_xy(statenow);
+      var x = to_x_window(pos.x) + edge/2;
+      var y = to_y_window(pos.y) + edge/2;
+      var angle = 2*Math.PI/ACTION.LENGTH;
+      ctx1.fillStyle = 'rgb(25, 135, 22)';
+      for (var a=0; a < ACTION.LENGTH; a++) {
+        var alpha = 0.5;
+        if (minmax[0] > minmax[1]) {
+          alpha = (qnow[a]-minmax[1])/(minmax[0]-minmax[1]);
+        }
+        var startangle = -5.0/8*Math.PI + a*Math.PI/4;
+        ctx1.globalAlpha = alpha;
+        ctx1.beginPath();
+        ctx1.moveTo(x, y);
+        ctx1.arc(x, y, edge*0.4, startangle, startangle+angle, false);
+        ctx1.fill();
       }
-      var startangle = -5.0/8*Math.PI + a*Math.PI/4;
-      ctx1.globalAlpha = alpha;
-      ctx1.beginPath();
-      ctx1.moveTo(x, y);
-      ctx1.arc(x, y, edge, startangle, startangle+angle, false);
-      ctx1.fill();
     }
     ctx1.globalAlpha = 1;
   }
