@@ -13,11 +13,19 @@
 
 <body>
 <div id="root">
-<canvas id="id_canvas1" width="600" height="600"></canvas>
+<canvas id="canvas" width="450" height="450"></canvas>
+
 <p id="info">There will be some infomation.</p>
+
+<form id ="buttons">
+  <input type="button" value="↑" style="padding: 10px 20px;" onClick="up_FPS()"> FPS 
+  <input type="button" value="↓" style="padding: 10px 20px;" onClick="down_FPS()"> <br><br><br>
+  <input type="button" value="Speed Learning" style="padding: 10px 20px;" onClick="toggle_speed_learning()">
+</form>
+
 <p id="instruction">Up/Down: Adjust FPS<br>
 Space: Speed learning<br>
-Mouse Drag: Toggle walls
+Drag | Tap: Toggle walls
 </p>
 </div>
 </body>
