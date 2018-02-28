@@ -218,10 +218,10 @@ window.onload = function () {
       toggle_speed_learning();
     }
     else if (evt.keyCode == 38) {
-      up_FPS();
+      up_FPS(1);
     }
     else if (evt.keyCode == 40) {
-      down_FPS();
+      down_FPS(1);
     }
   }
 
@@ -230,12 +230,12 @@ window.onload = function () {
     run_background = ~run_background;
   }
 
-  function up_FPS() {
-    FPS++; set_FPS(FPS);
+  function up_FPS(df) {
+    FPS+=df; set_FPS(FPS);
   }
 
-  function down_FPS() {
-    FPS--; set_FPS( FPS);
+  function down_FPS(df) {
+    FPS-=df; set_FPS( FPS);
   }
 
   function onMouseDown(evt) {
