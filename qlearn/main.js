@@ -5,7 +5,7 @@ window.onload = function () {
   delay = 1000.0 / FPS,
   edge = 50,
   padding = 10,
-  canvas1 = document.getElementById('id_canvas1');
+  canvas = document.getElementById('canvas');
 
   env = new Environment();
   qlearn = new QLearn(env.statenum, ACTION.LENGTH);
@@ -20,11 +20,11 @@ window.onload = function () {
   qdiff_total = 0;
   last_qdiff = 0;
 
-  if (!canvas1 || !canvas1.getContext) {
+  if (!canvas || !canvas.getContext) {
       alert("Not supported");
       return false;
   }
-  var ctx1 = canvas1.getContext('2d');
+  var ctx1 = canvas.getContext('2d');
 
   function initialize() {
 
@@ -198,8 +198,8 @@ window.onload = function () {
     infos += "episode: " + episode + "<br>";
     infos += "success: " + success + "<br>";
     infos += "failure: " + failed + "<br>";
-    infos += "average_step: " + average_walk + "<br>";
-    infos += "qdiff: " + last_qdiff + "<br>" ;
+    infos += "average_step: " + average_walk.toFixed(2) + "<br>";
+    infos += "qdiff: " + last_qdiff.toFixed(2) + "<br>" ;
     infos += "walk: " + walked + "<br>";
     sampleNode.innerHTML=infos;
   }
@@ -215,15 +215,27 @@ window.onload = function () {
 
   function onKeyDown(evt) {
     if (evt.keyCode == 32) {
-      set_FPS(30);
-      run_background = ~run_background;
+      toggle_speed_learning();
     }
     else if (evt.keyCode == 38) {
-      FPS++; set_FPS(FPS);
+      up_FPS(1);
     }
     else if (evt.keyCode == 40) {
-      FPS--; set_FPS( FPS);
+      down_FPS(1);
     }
+  }
+
+  function toggle_speed_learning() {
+    set_FPS(30);
+    run_background = ~run_background;
+  }
+
+  function up_FPS(df) {
+    FPS+=df; set_FPS(FPS);
+  }
+
+  function down_FPS(df) {
+    FPS-=df; set_FPS( FPS);
   }
 
   function onMouseDown(evt) {
@@ -243,6 +255,9 @@ window.onload = function () {
   document.onmousedown = onMouseDown;
   document.onmouseup = onMouseUp;
   document.onmousemove = onMouseMove;
+  document.up_FPS = up_FPS;
+  document.down_FPS = down_FPS;
+  document.toggle_speed_learning = toggle_speed_learning;
 
   loop();
 }

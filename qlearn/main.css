@@ -1,7 +1,4 @@
-﻿body {
-}
-
-#id_canvas1 {
+﻿#canvas {
  position:absolute;
  top: 0px;
  left: 0px;
@@ -14,9 +11,17 @@
  left: 420px;
  z-index: 1;
 }
+
 #instruction {
  position:absolute;
- top: 400px;
+ top: 330px;
  left: 420px;
  z-index: 1;
 }
+
+#buttons {
+  position:absolute;
+  top: 200px;
+  left: 420px;
+  z-index: 1;
+ }
